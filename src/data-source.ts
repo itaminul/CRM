@@ -1,6 +1,6 @@
 import { Users } from "src/entities/users";
 import { DataSource, DataSourceOptions } from "typeorm";
-import { Roles } from "./entities/role";
+
 
 export const AppDataSource: DataSourceOptions = {
   type: "postgres",
@@ -9,7 +9,7 @@ export const AppDataSource: DataSourceOptions = {
   username: "erpdb",
   password: "123456",
   database: "crm_db",
-  entities: [Users, Roles],
+  entities: [Users],
   migrations: ["./dist/migrations/*.js"],
   synchronize: false,
   logging: true,

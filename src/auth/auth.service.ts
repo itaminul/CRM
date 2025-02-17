@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,14 +18,21 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: {
         name: username,
-      },
-      relations: ["roles"],
+      }
     });
     if (user && bcrypt.compareSync(pass, user.password)) {
       const { password, ...result } = user;
       return result;
     }
     return null;
+  }
+
+  async register(registerDto: RegisterDto) {
+    try {
+      
+    } catch (error) {
+      
+    }
   }
 
   async login(loginDto: LoginDto) {
@@ -34,4 +42,6 @@ export class AuthService {
     }
     throw new UnauthorizedException();
   }
+
+
 }
