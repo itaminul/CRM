@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class RegisterDto {
   @IsNotEmpty()
@@ -24,5 +24,5 @@ export class RegisterDto {
   phase_no: number;
   @IsOptional()
   @IsString()
-  roll_id: number;
+  userRoleName: string;
 }
