@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { BaseDto } from 'src/common/dto/base.dto';
 
-export class RegisterDto {
+export class RegisterDto extends BaseDto {
   @IsNotEmpty()
   @IsString()
   email: string;
@@ -25,4 +26,10 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   userRoleName: string;
+  @IsOptional()
+  @IsNumber()
+  createdby: number;
+  @IsOptional()
+  @IsNumber()
+  updatedby: number
 }

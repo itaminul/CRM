@@ -1,15 +1,14 @@
-import { BaseEntity } from "src/common/BaseEntity";
+import { BaseEntity } from 'src/common/BaseEntity';
 import {
   Column,
   CreateDateColumn,
-  Entity,  
+  Entity,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
-
-@Entity("users")
+@Entity('users')
 export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -70,7 +69,11 @@ export class Users extends BaseEntity {
   @Column({ default: 0 })
   is_admin: number;
   @Column()
-  last_login: string;  
+  last_login: string;
   @Column()
   userRoleName: string;
+  @Column()
+  createdby: number;
+  @Column()
+  updatedby: number;
 }

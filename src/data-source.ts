@@ -1,16 +1,15 @@
-import { Users } from "src/entities/users";
-import { BaseEntity, DataSource, DataSourceOptions } from "typeorm";
-
+import { Users } from 'src/entities/users';
+import { BaseEntity, DataSource, DataSourceOptions } from 'typeorm';
 
 export const AppDataSource: DataSourceOptions = {
-  type: "postgres",
-  host: "localhost",
+  type: 'postgres',
+  host: 'localhost',
   port: 5432,
-  username: "erpdb",
-  password: "123456",
-  database: "crm_db",
+  username: 'erpdb',
+  password: '123456',
+  database: 'crm_db',
   entities: [Users, BaseEntity],
-  migrations: ["./dist/migrations/*.js"],
+  migrations: ['./dist/migrations/*.js'],
   synchronize: false,
   logging: true,
 };

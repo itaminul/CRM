@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/users';
 import { Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { BaseService } from 'src/common/services/base.service';
 import { AuthRepositories } from './auth.repositories';
+import { plainToClass } from 'class-transformer';
 
 
 @Injectable()
@@ -20,9 +21,22 @@ export class AuthService extends BaseService<Users> {
 
   async register(registerDto: RegisterDto) {
     try {
-      // Registration logic
+     // Check if user already exists
+    const existingUser = await this.userRepository.findByEmail(registerDto.email)
+    if (existingUser) {
+      throw new ConflictException("User with this email already exists")
+    }
+
+    // Hash password
+  //  const hashedPassword = await bcrypt.hash(registerDto.password, 10)
+
+    const resume = this.userRepository.create(registerDto);
+    // Save the Resume userRepository
+    const savedResume = await this.userRepository.save(resume);
+    return savedResume;
+
     } catch (error) {
-      // Error handling logic
+      console.log(error);
     }
   }
 
