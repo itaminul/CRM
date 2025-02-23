@@ -1,7 +1,11 @@
-import type { Repository, DeepPartial, FindOptionsWhere, BaseEntity, ObjectLiteral } from "typeorm"
+import { type Repository, type DeepPartial, type FindOptionsWhere, type ObjectLiteral, BaseEntity, Entity } from "typeorm"
 import { NotFoundException } from "@nestjs/common"
 
+@Entity()
 export class BaseRepository<T extends BaseEntity> {
+  save(entity: Promise<T>): T | PromiseLike<T> {
+    throw new Error('Method not implemented.')
+  }
   constructor(private readonly repository: Repository<T>) {}
 
   async findAll(): Promise<T[]> {

@@ -9,7 +9,7 @@ export class BaseService<T extends BaseEntity> {
     return this.repository.findAll();
   }
 
-  async findById(id: any): Promise<T> {
+  async findById(id: number): Promise<T> {
     return this.repository.findById(id);
   }
 
@@ -17,11 +17,11 @@ export class BaseService<T extends BaseEntity> {
     return this.repository.create(data);
   }
 
-  async update(id: any, data: DeepPartial<T>): Promise<T> {
+  async update(id: number, data: DeepPartial<T>): Promise<T> {
     return this.repository.update(id, data);
   }
 
-  async delete(id: any): Promise<void> {
+  async delete(id: number): Promise<void> {
     return this.repository.delete(id);
   }
 }
