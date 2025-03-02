@@ -4,6 +4,9 @@ import { BaseDto } from 'src/common/dto/base.dto';
 export class RegisterDto extends BaseDto {
   @IsNotEmpty()
   @IsString()
+  username: string;
+  @IsNotEmpty()
+  @IsString()
   email: string;
   @IsNotEmpty()
   @IsString()
@@ -22,14 +25,11 @@ export class RegisterDto extends BaseDto {
   address: string;
   @IsOptional()
   @IsString()
-  phase_no: number;
-  @IsOptional()
-  @IsString()
   userRoleName: string;
   @IsOptional()
   @IsNumber()
   createdby: number;
   @IsOptional()
   @IsNumber()
-  updatedby: number
+  updatedby: number;
 }
