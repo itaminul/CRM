@@ -7,8 +7,8 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   constructor(public readonly authService: AuthService) {}
 
-  @Post()
-  async login(loginDto: LoginDto) {
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
     try {
       const results = await this.authService.login(loginDto);
       return results;
@@ -20,7 +20,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     try {
-      console.log("registerDto", registerDto);
+      console.log('registerDto', registerDto);
       const results = await this.authService.register(registerDto);
       return results;
     } catch (error) {

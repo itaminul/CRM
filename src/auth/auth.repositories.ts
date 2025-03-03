@@ -19,8 +19,8 @@ export class AuthRepositories extends BaseRepository<Users> {
   }
 
   // Add custom repository methods here
-  async findByEmail(email: string): Promise<Users | undefined> {
-    return this.repository.findOne({ where: { email } })
+  async findByUserName(username: string): Promise<Users | undefined> {
+    return this.repository.findOne({ where: { username } })
   }
 }
 
