@@ -1,4 +1,5 @@
 import {
+  BaseEntity as TypeORMBaseEntity,
   Column,
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class BaseEntity {
+export class BaseEntity extends TypeORMBaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,4 +24,13 @@ export class BaseEntity {
   updatedAt: Date;
   @Column()
   updatedBy: number;
+
+  findAll(): any {
+
+  }
+
+  findById(): any {
+
+  }
+ 
 }

@@ -1,3 +1,4 @@
+import { BaseEntity } from "src/common/BaseEntity";
 import {
   Column,
   CreateDateColumn,
@@ -9,9 +10,9 @@ import {
 
 
 @Entity("users")
-export class Users {
+export class Users extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: bigint;
+  id: number;
   @Column({ default: 1 })
   old_new_status: number;
   @Column()
