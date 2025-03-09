@@ -32,4 +32,8 @@ export class RegisterDto extends BaseDto {
   @IsOptional()
   @IsNumber()
   updatedby: number;
+  @IsOptional()
+  @IsNumber()
+  role_id: number;
+  
 }
