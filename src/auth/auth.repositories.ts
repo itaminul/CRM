@@ -24,8 +24,8 @@ export class AuthRepositories extends BaseRepository<Users> {
 
   async findOneUser(username: any) {
     return this.repository.findOne({
-      where: { username },
-      relations: ['role'],
+      where: { username: username },
+    //  relations: ['role'],
     });
   }
 }
