@@ -14,8 +14,9 @@ export class BaseEntity extends TypeORMBaseEntity {
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
   @Column()
-  createdBy: number;
+  createdby: number;
   @UpdateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
@@ -23,7 +24,7 @@ export class BaseEntity extends TypeORMBaseEntity {
   })
   updatedAt: Date;
   @Column()
-  updatedBy: number;
+  updatedby: number;
 
   findAll(): any {
 
