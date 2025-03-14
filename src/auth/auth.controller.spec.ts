@@ -32,7 +32,7 @@ describe("AuthController", () => {
   describe("login", () => {
     it("should return a token when login is successful", async () => {
       const loginDto: LoginDto = {
-        email: "test@example.com",
+        username: "test@example.com",
         password: "password123",
       };
 
@@ -47,7 +47,7 @@ describe("AuthController", () => {
 
     it("should throw UnauthorizedException when login fails", async () => {
       const loginDto: LoginDto = {
-        email: "test@example.com",
+        username: "test@example.com",
         password: "wrongpassword",
       };
 
