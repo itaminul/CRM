@@ -6,6 +6,7 @@ import { Users } from 'src/entities/users';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthRepositories } from './auth.repositories';
 import { UserRepository } from 'src/common/user.repository';
+import { ConfigModule } from '@nestjs/config';
 
 const jwtConstants = {
   secret: 'secret_Key',
@@ -13,11 +14,11 @@ const jwtConstants = {
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forFeature([Users]),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'secret',
-      secretOrPrivateKey: jwtConstants.secret,
+      secret: process.env.JWT_SECRET || jwtConstants.secret,
       signOptions: { expiresIn: '12' },
     }),
   ],

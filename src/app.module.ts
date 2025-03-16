@@ -3,9 +3,14 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source';
 import { ErrorHandlingMiddleware } from './middleware/error-handling-middleware';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(AppDataSource), AuthModule],
+  imports: [
+    ConfigModule.forRoot(),    
+    TypeOrmModule.forRoot(AppDataSource),
+    AuthModule,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

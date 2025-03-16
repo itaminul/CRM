@@ -24,19 +24,41 @@ export class AuthService extends BaseService<Users> {
     super(userRepository);
   }
 
-  async validateUser(username: string, pass: string) {
-    console.log("username", username);
+  async validateUserBack(username: string, pass: string) {
+    console.log('username', username);
     const user = await this.userRepository.findOneUser(username);
-console.log("user", user);
+    console.log('user', user);
     if (!user || !(await bcrypt.compare(pass, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     return user;
   }
+  async validateUser(username: string, pass: string) {
+    console.log('Validating user:', username);
+    console.log('Validating pass:', pass);
 
-  async validateUserd(username: string, password: string) {
-    const user = await this.userRepository.findByUserName(username);
+    // Find user by username
+    const user = await this.userRepository.findOne({
+      where: { username }
+    });
+    console.log('Find user by username :', user);
+    if (!user) {
+      console.log('No user found for username:', username);
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    console.log('User found:', user);
+
+    // Compare passwords
+    const passwordMatch = await bcrypt.compare(pass, user.password);
+    if (!passwordMatch) {
+      console.log('Incorrect password for username:', username);
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    console.log('Password matches for username:', username);
+    return user;
   }
 
   async register(registerDto: RegisterDto) {
@@ -65,12 +87,31 @@ console.log("user", user);
   }
 
   async login(loginDto: LoginDto) {
+    console.log('JWT_SECRET:', process.env.JWT_SECRET);
+
+    // Validate user credentials
     const user = await this.validateUser(loginDto.username, loginDto.password);
-console.log("rule name", user);
-console.log("rule name_new", user.role.id);
+  
+    console.log('User found:', user);
+  
+    // Check if the role is properly populated
+    if (!user.role) {
+      console.log('No role found for the user:', user.username);
+      throw new UnauthorizedException('User does not have a role');
+    }
+  
+    console.log('Role name:', user.role.name);  // Log the role name
+  
+    // Create the payload for the JWT
     const payload = { username: user.username, role: user.role.name };
+  
+    // Return the access token
+    const access_token = this.jwtService.sign(payload);
+    console.log('Generated access token:', access_token);  // Log the generated token for debugging
+  
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token,
     };
   }
+  
 }
