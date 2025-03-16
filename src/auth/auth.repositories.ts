@@ -25,21 +25,30 @@ export class AuthRepositories extends BaseRepository<Users> {
   async findOneUser(username: any) {
     return this.repository.findOne({
       where: { username: username },
-     relations: ['role'],
+      relations: ['role'],
     });
   }
 
   async findOne(username: any): Promise<Users | any> {
+    // Extract the username property if it's an object
+    if (typeof username === 'object' && username.username) {
+      username = username.username; // Extract the username property
+    }
+
+    // Ensure username is a string
+    if (typeof username !== 'string') {
+      username = String(username); // Convert to string
+    }
+
     try {
-      console.log("check one username from repository", username);
+      const normalizedUsername = username.trim().toLowerCase(); // Normalize the username
       const user = await this.repository.findOne({
-        where: { username:'123' }, // or use { username: username } if necessary for clarity
-       relations: ['role'], // Include role relation if you need the role info along with the user
+        where: { username: normalizedUsername }, // Use the normalized username
+        relations: ['role'],
       });
-      console.log("check one", user);
       return user;
     } catch (error) {
-      // Handle any potential errors (logging or throwing exceptions as needed)
+      console.error('Error retrieving user:', error);
       throw new Error('Error retrieving user');
     }
   }

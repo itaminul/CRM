@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/users';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -35,29 +35,18 @@ export class AuthService extends BaseService<Users> {
     return user;
   }
   async validateUser(username: string, pass: string) {
-    console.log('Validating user:', username);
-    console.log('Validating pass:', pass);
-
     // Find user by username
-    const user = await this.userRepository.findOne({
-      where: { username }
-    });
-    console.log('Find user by username :', user);
+    const user = await this.userRepository.findOne(username);
+
     if (!user) {
       console.log('No user found for username:', username);
       throw new UnauthorizedException('Invalid credentials');
     }
-
-    console.log('User found:', user);
-
     // Compare passwords
     const passwordMatch = await bcrypt.compare(pass, user.password);
     if (!passwordMatch) {
-      console.log('Incorrect password for username:', username);
       throw new UnauthorizedException('Invalid credentials');
     }
-
-    console.log('Password matches for username:', username);
     return user;
   }
 
@@ -87,31 +76,18 @@ export class AuthService extends BaseService<Users> {
   }
 
   async login(loginDto: LoginDto) {
-    console.log('JWT_SECRET:', process.env.JWT_SECRET);
-
-    // Validate user credentials
     const user = await this.validateUser(loginDto.username, loginDto.password);
-  
-    console.log('User found:', user);
-  
-    // Check if the role is properly populated
     if (!user.role) {
       console.log('No role found for the user:', user.username);
       throw new UnauthorizedException('User does not have a role');
     }
-  
-    console.log('Role name:', user.role.name);  // Log the role name
-  
-    // Create the payload for the JWT
     const payload = { username: user.username, role: user.role.name };
-  
     // Return the access token
     const access_token = this.jwtService.sign(payload);
-    console.log('Generated access token:', access_token);  // Log the generated token for debugging
-  
+    // console.log('Generated access token:', access_token);  // Log the generated token for debugging
+
     return {
       access_token,
     };
   }
-  
 }
