@@ -13,17 +13,25 @@ import { RegisterDto } from './dto/register.dto';
 import { BaseService } from 'src/common/services/base.service';
 import { AuthRepositories } from './auth.repositories';
 import { plainToClass } from 'class-transformer';
+import { UserRepository } from 'src/common/user.repository';
 
 @Injectable()
 export class AuthService extends BaseService<Users> {
-  constructor(private readonly userRepository: AuthRepositories) {
+  constructor(
+    private readonly userRepository: AuthRepositories,
+    private readonly jwtService: JwtService,
+  ) {
     super(userRepository);
+  }
+
+  async validateUser(username: string, password: string) {
+    const user = await this.userRepository.findByUserName(username);
   }
 
   async register(registerDto: RegisterDto) {
     try {
       // Check if user already exists
-      const existingUser = await this.userRepository.findByUserName(
+      const existingUser = await this.userRepository.findOneUser(
         registerDto.username,
       );
       if (existingUser) {
@@ -47,9 +55,16 @@ export class AuthService extends BaseService<Users> {
 
   async login(loginDto: LoginDto) {
     try {
-      if (loginDto.username === 'aminul' && loginDto.password === '123456') {
-        return { access_token: 'mockAccessToken' };
-      }
+     // if (loginDto.username === 'aminul' && loginDto.password === '123456') {
+        const payload = {
+          username: loginDto.username,
+          sub: loginDto.id,
+          role: loginDto.name,
+        };
+        return {
+          access_token: this.jwtService.sign(payload),
+        };
+     // }
     } catch (error) {
       console.log(error);
     }
