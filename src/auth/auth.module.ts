@@ -7,15 +7,21 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthRepositories } from './auth.repositories';
 import { UserRepository } from 'src/common/user.repository';
 
+const jwtConstants = {
+  secret: 'secret_Key',
+};
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Users]),
     JwtModule.register({
-      secret: 'secretKey',
+      global: true,
+      secret: process.env.JWT_SECRET || 'secret',
+      secretOrPrivateKey: jwtConstants.secret,
       signOptions: { expiresIn: '12' },
     }),
   ],
-  providers: [JwtService, AuthService, AuthRepositories, UserRepository],
+  providers: [AuthService, AuthRepositories, UserRepository, JwtService],
   controllers: [AuthController],
 })
 export class AuthModule {}
