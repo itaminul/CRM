@@ -35,6 +35,19 @@ export abstract class BaseRepository<T extends IBaseEntity>
     return entity;
   }
 
+  async findOneUser(username: string): Promise<T> {
+    const entity = await this.repository.findOne({
+      where: { username } as unknown as FindOptionsWhere<T>,
+    });
+
+    if (!entity) {
+      throw new NotFoundException(`Entity with ID ${username} not found`);
+    }
+
+    return entity;
+  }
+
+
   async update(id: number, data: Partial<T>): Promise<T> {
     await this.repository.update(id, data as any);
     return await this.findOne(id);

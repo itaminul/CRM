@@ -24,7 +24,18 @@ export class AuthService extends BaseService<Users> {
     super(userRepository);
   }
 
-  async validateUser(username: string, password: string) {
+  async validateUser(username: string, pass: string) {
+    console.log("username", username);
+    const user = await this.userRepository.findOneUser(username);
+console.log("user", user);
+    if (!user || !(await bcrypt.compare(pass, user.password))) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
+
+  async validateUserd(username: string, password: string) {
     const user = await this.userRepository.findByUserName(username);
   }
 
@@ -54,19 +65,12 @@ export class AuthService extends BaseService<Users> {
   }
 
   async login(loginDto: LoginDto) {
-    try {
-     // if (loginDto.username === 'aminul' && loginDto.password === '123456') {
-        const payload = {
-          username: loginDto.username,
-          sub: loginDto.id,
-          role: loginDto.name,
-        };
-        return {
-          access_token: this.jwtService.sign(payload),
-        };
-     // }
-    } catch (error) {
-      console.log(error);
-    }
+    const user = await this.validateUser(loginDto.username, loginDto.password);
+console.log("rule name", user);
+console.log("rule name_new", user.role.id);
+    const payload = { username: user.username, role: user.role.name };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
