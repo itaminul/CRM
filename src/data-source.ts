@@ -20,5 +20,6 @@ export const AppDataSource: DataSourceOptions = {
 const dataSource = new DataSource(AppDataSource);
 export default dataSource;
 
-// npm run typeorm -- migration:generate -d ./dist/data-source.js ./src/migrations/CreateEmployeeAndDepartmentTables
+// npm run typeorm -- migration:generate -d ./dist/src/data-source.js ./src/migrations/CreateEmployeeAndDepartmentTables
 //npm run typeorm -- migration:run -d ./src/data-source.ts
+//npm rum migration:run
