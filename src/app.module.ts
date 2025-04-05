@@ -7,9 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // Make ConfigModule global
-    }),
+    // ConfigModule.forRoot({
+    //   isGlobal: true, // Make ConfigModule global
+    // }),
     ConfigModule.forRoot(),    
     TypeOrmModule.forRoot(AppDataSource),
     AuthModule,

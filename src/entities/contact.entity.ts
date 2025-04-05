@@ -11,8 +11,8 @@ import { Company } from './company.entity';
 
 @Entity('contacts')
 export class Contact {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ length: 50 })
   firstName: string;
@@ -38,8 +38,12 @@ export class Contact {
   @Column({ length: 100, nullable: true })
   position: string;
 
+  @Column({ type: 'integer' })
+  orgId: number;
+
   @Column({ length: 50, nullable: true })
   leadSource: string;
+  
   @CreateDateColumn()
   createdAt: Date;
 
