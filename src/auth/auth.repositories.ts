@@ -25,7 +25,22 @@ export class AuthRepositories extends BaseRepository<Users> {
   async findOneUser(username: any) {
     return this.repository.findOne({
       where: { username: username },
-    //  relations: ['role'],
+     relations: ['role'],
     });
+  }
+
+  async findOne(username: any): Promise<Users | any> {
+    try {
+      console.log("check one username from repository", username);
+      const user = await this.repository.findOne({
+        where: { username:'123' }, // or use { username: username } if necessary for clarity
+       relations: ['role'], // Include role relation if you need the role info along with the user
+      });
+      console.log("check one", user);
+      return user;
+    } catch (error) {
+      // Handle any potential errors (logging or throwing exceptions as needed)
+      throw new Error('Error retrieving user');
+    }
   }
 }

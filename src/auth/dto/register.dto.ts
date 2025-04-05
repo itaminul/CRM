@@ -35,5 +35,7 @@ export class RegisterDto extends BaseDto {
   @IsOptional()
   @IsNumber()
   role_id: number;
+  @IsNotEmpty()
+  roleName: string; // Role should be provided as a string (e.g., "admin", "user")
   
 }
