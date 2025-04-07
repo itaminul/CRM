@@ -12,6 +12,9 @@ export class ContactService {
 
   async getAll() {
     try {
-    } catch (error) {}
+      return await this.contactRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 }

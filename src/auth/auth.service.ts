@@ -78,7 +78,7 @@ export class AuthService extends BaseService<Users> {
         loginDto.password,
       );
       if (!user.role) {
-        console.log('No role found for the user:', user.username);
+       // console.log('No role found for the user:', user.username);
         throw new UnauthorizedException('User does not have a role');
       }
       const payload = { username: user.username, role: user.role.name };
