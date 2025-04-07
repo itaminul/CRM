@@ -1,10 +1,12 @@
-import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { Controller, Get, HttpStatus, UseFilters } from '@nestjs/common';
 import { ContactService } from './contact.service';
+import { ExceptionsFilter } from 'src/filters/all-exceptions';
 @Controller('contact')
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
   @Get()
+    @UseFilters(new ExceptionsFilter())
   async getAll() {
     try {
       const contacts = await this.contactService.getAll();
