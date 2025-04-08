@@ -43,7 +43,7 @@ export class Contact {
 
   @Column({ length: 50, nullable: true })
   leadSource: string;
-  
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -57,5 +57,11 @@ export class Contact {
   // Computed property (not stored in DB)
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
+  }
+
+  set fullName(name: string) {
+    const [firstName, lastName] = name.split(' ');
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
 }

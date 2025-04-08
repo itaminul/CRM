@@ -7,25 +7,44 @@ import { ResponseInterceptor } from './interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Global validation pipe with detailed error messages
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-      exceptionFactory: (errors) => {
-        const messages = errors.map((error) => {
-          return {
-            property: error.property,
-            constraints: error.constraints,
-          };
+      exceptionFactory: (validationErrors = []) => {
+        const formatErrors = (errors) => {
+          return errors.map((error) => {
+            const constraints = Object.values(error.constraints || {});
+            const nestedErrors =
+              error.children && error.children.length > 0
+                ? formatErrors(error.children)
+                : [];
+
+            return {
+              field: error.property,
+              errors: constraints.concat(...nestedErrors),
+            };
+          });
+        };
+
+        const errors = formatErrors(validationErrors);
+
+        return new BadRequestException({
+          statusCode: 400,
+          message: 'Validation failed',
+          errors: errors,
         });
-        return new BadRequestException(messages);
       },
     }),
   );
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new UnauthorizedExceptionFilter());
+  // app.useGlobalInterceptors(new ResponseInterceptor());
+  app.setGlobalPrefix('api')
   await app.listen(3000);
 }
 bootstrap();

@@ -57,6 +57,12 @@ export class ExceptionsFilter implements ExceptionFilter {
       error = exception.stack || 'Unknown error';
     }
 
+        // Custom handling for "Data not found" message
+        if (message === 'Data not found') {
+          status = HttpStatus.NOT_FOUND;
+          const code = 'DATA_NOT_FOUND';
+          details = null; // No extra details required for this case
+        }
     // Construct the response
     const responseBody = {
       statusCode: status,
