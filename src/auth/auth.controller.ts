@@ -22,7 +22,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     try {
-      console.log('registerDto', registerDto);
+     // console.log('registerDto', registerDto);
       const results = await this.authService.register(registerDto);
       return results;
     } catch (error) {

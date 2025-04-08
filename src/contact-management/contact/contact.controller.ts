@@ -11,11 +11,6 @@ export class ContactController {
     try {
       const contacts = await this.contactService.getAll();
       return {
-        success: true,
-        statusCode: HttpStatus.OK,
-        message: contacts.length
-          ? 'Contacts retrieved successfully'
-          : 'No contacts found',
         data: contacts
       };
     } catch (error) {

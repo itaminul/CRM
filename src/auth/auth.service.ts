@@ -67,7 +67,7 @@ export class AuthService extends BaseService<Users> {
       const savedResume = await this.userRepository.save(resume);
       return savedResume;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
