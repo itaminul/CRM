@@ -24,31 +24,36 @@ export class AuthService extends BaseService<Users> {
     super(userRepository);
   }
 
-  async validateUserBack(username: string, pass: string) {
-    console.log('username', username);
-    const user = await this.userRepository.findOneUser(username);
-    console.log('user', user);
-    if (!user || !(await bcrypt.compare(pass, user.password))) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
 
-    return user;
-  }
   async validateUser(username: string, pass: string) {
     // Find user by username
     const user = await this.userRepository.findOne(username);
 
     if (!user) {
-      console.log('No user found for username:', username);
-      throw new UnauthorizedException('Invalid credentials');
+        console.log('No user found for username:', username);
+        // Throw UnauthorizedException with custom message and structure
+        throw new UnauthorizedException({
+            statusCode: 401,
+            message: 'Invalid username or password',
+            error: 'Unauthorized',
+        });
     }
+
     // Compare passwords
     const passwordMatch = await bcrypt.compare(pass, user.password);
     if (!passwordMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+        console.log('Invalid password attempt for username:', username);
+        // Throw UnauthorizedException with custom message and structure
+        throw new UnauthorizedException({
+            statusCode: 401,
+            message: 'Invalid username or password',
+            error: 'Unauthorized',
+        });
     }
+
+    // Return user if everything is valid
     return user;
-  }
+}
 
   async register(registerDto: RegisterDto) {
     try {

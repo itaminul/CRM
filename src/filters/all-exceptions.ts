@@ -4,12 +4,13 @@ import {
   type ArgumentsHost,
   HttpException,
   HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { QueryFailedError, EntityNotFoundError } from 'typeorm';
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
+export class ExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -18,29 +19,56 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
     let error = 'Unknown error';
+    let details: string | undefined;
 
-    if (exception instanceof HttpException) {
+    
+    if (exception instanceof UnauthorizedException) {
+      // Handle UnauthorizedException specifically
+      status = HttpStatus.UNAUTHORIZED;
+      message = 'Invalid credentials';
+      error = 'Unauthorized';
+
+      // Extract details from the exception message
+      const exceptionMessage = exception.message;
+      if (exceptionMessage.includes('No user found for username')) {
+        details = 'No user found with the provided username';
+      } else if (exceptionMessage.includes('Invalid credentials')) {
+        details = 'Incorrect username or password';
+      } else {
+        details = exceptionMessage; // Fallback to the original message
+      }
+    } else if (exception instanceof HttpException) {
+      // Handle other HttpExceptions
       status = exception.getStatus();
       message = exception.message;
+      error = exception.name;
     } else if (exception instanceof QueryFailedError) {
+      // Handle TypeORM QueryFailedError
       status = HttpStatus.BAD_REQUEST;
       message = 'Database query failed';
       error = this.getQueryErrorMessage(exception);
     } else if (exception instanceof EntityNotFoundError) {
+      // Handle TypeORM EntityNotFoundError
       status = HttpStatus.NOT_FOUND;
       message = 'Entity not found';
     } else if (exception instanceof Error) {
+      // Handle generic errors
       message = exception.message;
-      error = exception.stack;
+      error = exception.stack || 'Unknown error';
     }
 
-    response.status(status).json({
+    // Construct the response
+    const responseBody = {
       statusCode: status,
       message,
       error,
+      details, // Include details for UnauthorizedException
       timestamp: new Date().toISOString(),
       path: request.url,
-    });
+    };
+
+    // Send the response
+    response.status(status).json(responseBody);
   }
 
   private getQueryErrorMessage(exception: QueryFailedError): string {
