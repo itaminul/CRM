@@ -15,7 +15,7 @@ export class AuthController {
       const results = await this.authService.login(loginDto);
       return results;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
@@ -26,7 +26,7 @@ export class AuthController {
       const results = await this.authService.register(registerDto);
       return results;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 }
