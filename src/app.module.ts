@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source';
 import { ErrorHandlingMiddleware } from './middleware/error-handling-middleware';
 import { ConfigModule } from '@nestjs/config';
+import { ContactController } from './contact-management/contact/contact.controller';
+import { ContactModule } from './contact-management/contact/contact.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot(),    
     TypeOrmModule.forRoot(AppDataSource),
     AuthModule,
+    ContactModule,
   ],
+  controllers: [ContactController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
