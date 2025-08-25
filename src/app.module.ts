@@ -9,9 +9,9 @@ import { ContactModule } from './contact-management/contact/contact.module';
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({
-    //   isGlobal: true, // Make ConfigModule global
-    // }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     ConfigModule.forRoot(),    
     TypeOrmModule.forRoot(AppDataSource),
     AuthModule,
